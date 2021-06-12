@@ -8,11 +8,11 @@
 ============Quantumultx===============
 [task_local]
 #特物Z|万物皆可国创
-30 11 * * * https://raw.githubusercontent.com/Wenmoux/scripts/master/jd/jd_superBrand.js, tag=特物Z|万物皆可国创, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+30 11 1-18 6 * https://raw.githubusercontent.com/Wenmoux/scripts/master/jd/jd_superBrand.js, tag=特物Z|万物皆可国创, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "30 11 * * *" script-path=https://raw.githubusercontent.com/Wenmoux/scripts/master/jd/jd_superBrand.js tag=特物Z|万物皆可国创
+cron "30 11 1-18 6 *" script-path=https://raw.githubusercontent.com/Wenmoux/scripts/master/jd/jd_superBrand.js tag=特物Z|万物皆可国创
 
 ===============Surge=================
 特物Z|万物皆可国创 = type=cron,cronexp="30 11 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/Wenmoux/scripts/master/jd/jd_superBrand.js
@@ -25,6 +25,7 @@ const $ = new Env('特物Z|万物皆可国创');
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const randomCount = $.isNode() ? 20 : 5;
+const Opencardtw= $.isNode() ? (process.env.Opencardtw?process.env.Opencardtw:false):false
 const notify = $.isNode() ? require('./sendNotify') : '';
 let merge = {}
 let codeList = []
@@ -49,11 +50,11 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
         });
         return;
     }
-                const signeid= "zFayjeUTzZWJGwv2rVNWY4DNAQw"       
-                const signactid = 1000021
-                const signenpid = "uK2fYitTgioETuevoY88bGEts3U"
-                const signdataeid = "47E6skJcyZx7GSUFXyomLgF1FLCA"       
-    for (let i = 0; i < cookiesArr.length ; i++) {
+    const signeid = "zFayjeUTzZWJGwv2rVNWY4DNAQw"
+    const signactid = 1000021
+    const signenpid = "uK2fYitTgioETuevoY88bGEts3U"
+    const signdataeid = "47E6skJcyZx7GSUFXyomLgF1FLCA"
+    for (let i = 0; i < cookiesArr.length; i++) {
         cookie = cookiesArr[i];
         if (cookie) {
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
@@ -75,24 +76,33 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
                 }
                 continue
             }
-              await getid("superBrandSecondFloorMainPage", "secondfloor")
-            if ($.cando&&$.enpid) {
+            await getid("superBrandSecondFloorMainPage", "secondfloor")
+            if ($.cando && $.enpid) {
                 await getCode("secondfloor", $.actid)
-                if($.taskList){              
-                await doTask("secondfloor", $.enpid, $.taskList.encryptAssignmentId, $.taskList.ext.followShop[0].itemId, $.taskList.assignmentType)
-            } 
+                if ($.taskList) {
+                    for (task of $.taskList) {
+                        if (task.assignmentType == 3) {
+                        //    console.log(task)
+                            await doTask("secondfloor", $.enpid, task.encryptAssignmentId, task.ext.followShop[0].itemId, task.assignmentType)
+                        } else{ 
+                        if(Opencardtw){
+                            await doTask("secondfloor", $.enpid, task.encryptAssignmentId, task.ext.brandMemberList[0].itemId, task.assignmentType)
+                        }else{console.log("默认不执行开卡任务") }
+                        }
+                    }
+                }
                 await superBrandTaskLottery()
-                await $.wait(500);                
+                await $.wait(500);
                 await superBrandTaskLottery()
-                await $.wait(1000);        
-                await doTask("sign", signenpid,signdataeid, 1, 5)
-                await $.wait(1000);     
+                await $.wait(1000);
+                await doTask("sign", signenpid, signdataeid, 1, 5)
+                await $.wait(1000);
                 await superBrandTaskLottery("sign", signactid, signenpid, signeid)
-               
+
             }
         }
     }
-    for (let i = 0; i < cookiesArr.length ; i++) {
+    for (let i = 0; i < cookiesArr.length; i++) {
         cookie = cookiesArr[i];
         if (cookie) {
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
@@ -103,11 +113,14 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
             for (l = 0; l < codeList.length; l++) {
                 console.log(`为 ${codeList[l]}助力中`)
                 let code = await doTask("secondfloor", $.enpid, $.inviteenaid, codeList[l], 2)
-                if(code == 108){ l=9999;console.log("助力次数已满")}
+                if (code == 108) {
+                    l = 9999;
+                    console.log("助力次数已满")
+                }
             }
         }
     }
-    for (let i = 0; i < cookiesArr.length ; i++) {
+    for (let i = 0; i < cookiesArr.length; i++) {
         cookie = cookiesArr[i];
         if (cookie) {
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
@@ -116,7 +129,7 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
             $.nickName = '';
             console.log(`\n******开始【京东账号${$.index}】抽奖\n`);
             await superBrandTaskLottery()
-        //    await superBrandTaskLottery()
+            //    await superBrandTaskLottery()
             await superBrandTaskLottery()
         }
     }
@@ -139,11 +152,11 @@ function getid(functionid, source) {
                     //      console.log(data)
                     if (data.data && data.code === "0" && data.data.result) {
                         let result = data.data.result
-                        if(result.activityBaseInfo){
-                        $.actid = result.activityBaseInfo.activityId
-                        $.actname = result.activityBaseInfo.activityName
-                        $.enpid = result.activityBaseInfo.encryptProjectId
-                        console.log(`当前活动：${$.actname}  ${$.actid}`)
+                        if (result.activityBaseInfo) {
+                            $.actid = result.activityBaseInfo.activityId
+                            $.actname = result.activityBaseInfo.activityName
+                            $.enpid = result.activityBaseInfo.encryptProjectId
+                            console.log(`当前活动：${$.actname}  ${$.actid}`)
                         }
                     } else {
                         console.log("获取失败")
@@ -173,15 +186,15 @@ function getCode(source, actid) {
                     console.log(`${$.name} API请求失败，请检查网路重试`);
                 } else {
                     data = JSON.parse(data);
-                         //  console.log(data.data.result)
+                    //  console.log(data.data.result)
                     if (data && data.data && data.code === "0" && source === "secondfloor") {
-                        if (data.data.result && data.data.result.taskList ) {
-                            $.taskList = data.data.result.taskList[0]
-                        //    console.log($.taskList)
+                        if (data.data.result && data.data.result.taskList) {
+                            $.taskList = data.data.result.taskList.filter(x => x.assignmentType == 3 || x.assignmentType == 7)
+                            //    console.log($.taskList)
                             let result = data.data.result.taskList.filter(x => x.assignmentType == 2)[0]
                             let encryptAssignmentId = result.encryptAssignmentId
                             let itemid = result.ext.assistTaskDetail.itemId
-                          //  console.log(result)
+                            //  console.log(result)
                             $.inviteenaid = result.encryptAssignmentId
                             codeList[codeList.length] = itemid
                             console.log(`获取邀请码成功 ${itemid}`);
