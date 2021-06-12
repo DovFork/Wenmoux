@@ -1,6 +1,6 @@
 /*
 618限时盲盒@wenmoux
-活动入口：签到领豆 618盲盒
+活动入口：签到领豆 6.18亿
 优先助力前面的号,如满了依次往后
 更新地址：https://raw.githubusercontent.com/Wenmoux/scripts/master/jd/jd_limitBox.js
 已支持IOS双京东账号, Node.js支持N个京东账号

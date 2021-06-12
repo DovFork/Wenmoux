@@ -1,6 +1,7 @@
 /*
 天降红包
 每次邀请拆完5元红包,满30可提现,需邀请新人下单才有提现机会
+入口 我的-赚30
 更新: 2021-06-09 16:27
 抄自 @yangtingxiao 抽奖机脚本
 https://raw.githubusercontent.com/Wenmoux/scripts/master/jd/jd_SplitRedPacket.js
