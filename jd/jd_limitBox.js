@@ -51,7 +51,7 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
         return;
     }
 
-    for (let i = 0; i < cookiesArr.length; i++) {
+    for (let i = 0; i < cookiesArr.length ; i++) {
         cookie = cookiesArr[i];
         if (cookie) {
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
@@ -83,7 +83,7 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
             await $.wait(1000);
         }
     }
-    for (let i = 0; i < cookiesArr.length; i++) {
+    for (let i = 0; i < cookiesArr.length ; i++) {
         cookie = cookiesArr[i];
         if (cookie) {
             $.index = i + 1;
@@ -96,7 +96,7 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
                 if (status === "LB604" || status === "LB204") {
                     l = 999
                 } else if (status === "LB704") {
-                    //     codeList.splice(l--, 1)  //删除已满助力码             
+                        codeList.splice(l--, 1)  //删除已满助力码            
                 }
 
             }
@@ -165,7 +165,7 @@ function getcode() {
                         console.log(`${$.name} API请求失败，请检查网路重试`);
                     } else {
                         data = JSON.parse(data);
-                        console.log(data)
+                    //    console.log(data)
                         if (data.errorCode) {
                             resolve(data.errorCode)
                             console.log(data.errorMessage)

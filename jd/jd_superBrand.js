@@ -116,6 +116,8 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
                 if (code == 108) {
                     l = 9999;
                     console.log("助力次数已满")
+                }else if(code == 103){
+                codeList.splice(l--, 1) //任务已完成               
                 }
             }
         }
@@ -268,8 +270,13 @@ function superBrandTaskLottery(source = "secondfloor", actid, enpid, signeid) {
                     data = JSON.parse(data);
                     //   console.log(data)
                     if (data && data.code === "0") {
-                        if (data.data.bizCode === "TK000") {
+                        if (data.data.bizCode === "TK000") {                            
+                            let reward = data.data.result.userAwardInfo
+                            if(reward&&reward.beanNum){
+                            console.log(`恭喜你 获得 ${reward.beanNum}京🐶`)                            
+                            }else{
                             console.log(`获得 你猜获得了啥🐶`)
+                            }
                         } else {
                             console.log(data.data.bizMsg)
                         }
