@@ -66,6 +66,7 @@ message = ""
                         i = 9999
                     } else {
                         await read(url)
+                        await $.wait(1000);
                     }
                 }
                 if ($.message.length != 0) {
