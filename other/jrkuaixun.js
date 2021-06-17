@@ -3,28 +3,29 @@
 微信打开
 立即参与 -> http://h5.jrkuaixun.xyz/j/h?upuid=136513&ch=xmy&type=1
 备用链接 -> http://h5.njchenyue.xyz/j/h?upuid=136513&ch=xmy&type=1
-一小时30×0.01=0.3￥ 我测试两次是秒到的
+我测试20是秒到的
 每小时有0.3 一天5轮 一天1.5
-
+进不去关注10秒读书极速版公众号用官方链接
 使用方法:点击开始阅读 成功阅读一次即可抓到包
 脚本没写过盾的
-每次跑都要手动验证一次：点立即阅读,等文章出来后关闭页面(注意 千万不要返回)
-没用ios设备所以不清楚能不能抓到ck
-拉一人头提现0.3奖励0.5
+每次运行都要手动验证一次(也就是一天5次)
+点立即阅读,等文章出来后关闭页面(注意 千万不要返回)
+拉一人头提现0.3奖励0.5 0.8再奖励0.5
 https://t.me/wenmou_car
+
 [task_local]
 #10s阅读
 0 8-14/1 * * * https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/jrkuaixun.js, tag=10s阅读, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 [rewrite_local]
 #10s阅读
-http:\/\/m.qtyromm.top\/read_channel\/do_read&pageshow.* url script-request-body https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/jrkuaixun.js
+.*read_channel\/do_read&pageshow.* url script-request-body https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/jrkuaixun.js
  
 #loon
-http:\/\/m.qtyromm.top\/read_channel\/do_read&pageshow.* script-path=https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/jrkuaixun.js, requires-body=true, timeout=10, tag=10s阅读
+.*read_channel\/do_read&pageshow.* script-path=https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/jrkuaixun.js, requires-body=true, timeout=10, tag=10s阅读
  
 #surge
  
-10s阅读 = type=http-request,pattern=http:\/\/m.qtyromm.top\/read_channel\/do_read&pageshow.*,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/jrkuaixun.js,script-update-interval=0
+10s阅读 = type=http-request,pattern=.*read_channel\/do_read&pageshow.*,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/jrkuaixun.js,script-update-interval=0
  
 [MITM]
 hostname = m.qtyromm.top
@@ -73,7 +74,7 @@ message = ""
                     message += `账号【${k+1}】：${$.message} \n\n `
                 }
             }
-        }
+        }    
         if ($.isNode()) {
             if (message.length != 0) {
                 await notify.sendNotify("10s阅读", `${message}\n\n吹水群：https://t.me/wenmou_car`);
