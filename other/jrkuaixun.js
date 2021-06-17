@@ -1,8 +1,9 @@
 /*
 10s阅读
 微信打开
-立即参与 -> http://h5.jrkuaixun.xyz/j/h?upuid=136513&ch=xmy&type=1
-备用链接 -> http://h5.njchenyue.xyz/j/h?upuid=136513&ch=xmy&type=1
+百万红包免费领取，随机红包，提现秒到，我已提现88元
+立即参与 -> http://h5.ih6.top/j/r1?upuid=136678&ch=xmy
+备用链接 -> http://h5.hakc.top/j/r1?upuid=136678&ch=xmy
 我测试20是秒到的
 每小时有0.3 一天5轮 一天1.5
 进不去关注10秒读书极速版公众号用官方链接
@@ -28,27 +29,26 @@ https://t.me/wenmou_car
 10s阅读 = type=http-request,pattern=.*read_channel\/do_read&pageshow.*,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/jrkuaixun.js,script-update-interval=0
  
 [MITM]
-hostname = m.qtyromm.top
+hostname = m.lainiwl.top
  
 */
 const $ = new Env('10s阅读');
 const notify = $.isNode() ? require('./sendNotify') : '';
 
-let host = `http://m.qtyromm.top`;
+let host = $.getdata('read10surl')?$.getdata('read10surl'):`http://m.lainiwl.top`;
 let cookiesArr = [$.getdata('read10sck')]
 if ($.isNode()) {
     cookiesArr = process.env.Readck ? process.env.Readck.split("@") : []
     host = process.env.readapi ? process.env.readapi : host
 }
 message = ""
-
     !(async () => {
         if (typeof $request !== "undefined") {
             await read10sck()
         }
         if (!cookiesArr[0]) {
-            $.msg($.name, '【提示】请先获取cookie', 'http://h5.jrkuaixun.xyz/j/h?upuid=136513&ch=xmy&type=1', {
-                "open-url": "http://h5.jrkuaixun.xyz/j/h?upuid=136513&ch=xmy&type=1"
+            $.msg($.name, '【提示】请先获取cookie', '微信打开 http://h5.hakc.top/j/r1?upuid=136678&ch=xmy', {
+                "open-url": "http://h5.hakc.top/j/r1?upuid=136678&ch=xmy"
             });
             return;
         }
@@ -74,16 +74,18 @@ message = ""
                     message += `账号【${k+1}】：${$.message} \n\n `
                 }
             }
-        }    
-        if ($.isNode()) {
+        }   
+        if (message.length != 0) {
+         $.msg($.name, "", '10s阅读' + message) 
+         }
+    /*    if ($.isNode()) {
             if (message.length != 0) {
                 await notify.sendNotify("10s阅读", `${message}\n\n吹水群：https://t.me/wenmou_car`);
             }
         } else {
             $.msg($.name, "", '10s阅读' + message)
         }
-
-
+        */
     })()
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
@@ -92,8 +94,10 @@ message = ""
 
 function read10sck() {
     if ($request.url.indexOf("do_read") > -1) {
-        // const read10surl = $request.url
-        //  if(read10surl)     $.setdata(read10surl,"read10surl")
+        const read10surls = $request.url
+        let read10surl = read10surls.match(/.+?top/)
+        $.msg($.name, "", '10s阅读 获取数据获取成功！'+read10surl)
+          if(read10surl)     $.setdata(read10surl[0],"read10surl")
         //   $.log(read10surl)
         //  const read10shd = JSON.stringify()
         if ($request.headers.Cookie) $.setdata($request.headers.Cookie, `read10sck`)
@@ -104,20 +108,21 @@ function read10sck() {
 
 function read(url1) {
     return new Promise(async (resolve) => {
-        let headers = {
-            cookie,
-            "X-Requested-With": "XMLHttpRequest"
-        }
         if (!url1) {
             url = `${host}/read_channel/do_read&pageshow&r=0.8321951810381554`
         } else {
             url = url1
         }
+      let headers = {
+            cookie,
+            referer:url,
+            "X-Requested-With": "XMLHttpRequest"
+        }
         let options = {
             headers,
             url
         }
-        //     console.log(options)
+         //  console.log(options)
         $.get(options, async (err, resp, data) => {
             try {
                 if (err) {
@@ -128,10 +133,8 @@ function read(url1) {
                     if (!url1) {
                         console.log(data)
                         data = JSON.parse(data);
-
-                        if (data.url) {
+                        if (data.url) {                       
                             resolve(data.url)
-                            //    console.log(data.url)
                         } else {
                             console.log(data.click_check)
                             if (data.click_check) {
