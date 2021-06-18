@@ -2,26 +2,26 @@
 618限时盲盒@wenmoux
 活动入口：签到领豆 6.18亿
 优先助力前面的号,如满了依次往后
-更新地址：https://raw.githubusercontent.com/Wenmoux/scripts/wen/jd/jd_limitBox.js
+更新地址：https://raw.githubusercontent.com/Wenmoux/scripts/master/jd/jd_limitBox.js
 已支持IOS双京东账号, Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, 小火箭，JSBox, Node.js
 ============Quantumultx===============
 [task_local]
 #618限时盲盒
-30 7,19 1-18 6 * https://raw.githubusercontent.com/Wenmoux/scripts/wen/jd/jd_limitBox.js, tag=618限时盲盒, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+30 7,19 1-18 6 * https://raw.githubusercontent.com/Wenmoux/scripts/master/jd/jd_limitBox.js, tag=618限时盲盒, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "30 7,19 1-18 6 *" script-path=https://raw.githubusercontent.com/Wenmoux/scripts/wen/jd/jd_limitBox.js tag=618限时盲盒
+cron "30 7,19 1-18 6 *" script-path=https://raw.githubusercontent.com/Wenmoux/scripts/master/jd/jd_limitBox.js tag=618限时盲盒
 
 ===============Surge=================
-618限时盲盒 = type=cron,cronexp="30 7,19 1-18 6 *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/Wenmoux/scripts/wen/jd/jd_limitBox.js
+618限时盲盒 = type=cron,cronexp="30 7,19 1-18 6 *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/Wenmoux/scripts/master/jd/jd_limitBox.js
 
 ============小火箭=========
-618限时盲盒 = type=cron,script-path=https://raw.githubusercontent.com/Wenmoux/scripts/wen/jd/jd_limitBox.js, cronexpr="30 7,19 1-18 6 *", timeout=3600, enable=true
+618限时盲盒 = type=cron,script-path=https://raw.githubusercontent.com/Wenmoux/scripts/master/jd/jd_limitBox.js, cronexpr="30 7,19 1-18 6 *", timeout=3600, enable=true
 
  */
-const $ = new Env('618限时盲盒');
+const $ = new Env('618限时盲盒瓜分奖励');
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 
@@ -29,6 +29,7 @@ const randomCount = $.isNode() ? 20 : 5;
 const notify = $.isNode() ? require('./sendNotify') : '';
 let merge = {}
 let codeList = []
+let message =""
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [],
     cookie = '';
@@ -74,90 +75,29 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
                 }
                 continue
             }
-            await dotask(1)
-            await dotask(2)
-            let actdata = await getcode()
-            for (k = 0; k < $.availableOpenBoxNum; k++) {
-                await limitBoxDraw()
-            }
+          await  bigAward()
+          if($.beans!=0){message += `【京东账号${$.index}】${$.nickName || $.UserName}\n瓜分成功,活动${$.beans}京🐶`}
             await $.wait(1000);
+            
         }
-    }
-    for (let i = 0; i < cookiesArr.length ; i++) {
-        cookie = cookiesArr[i];
-        if (cookie) {
-            $.index = i + 1;
-            console.log(`\n******开始【京东账号${$.index}】\n`);
-            for (l = 0; l < codeList.length; l++) {
-                console.log(`为 ${codeList[l].masterPin}助力中`)
-                //   console.log(codeList[l])
-                let status = await help(codeList[l].masterPin, codeList[l].shareDate)
-                await $.wait(500);
-                if (status === "LB604" || status === "LB204") {
-                    l = 999
-                } else if (status === "LB704") {
-                        codeList.splice(l--, 1)  //删除已满助力码            
-                }
-
+        
+           if ($.isNode()) {
+            if (message.length != 0) {
+                await notify.sendNotify("限时盲盒瓜分奖励", `${message}\n\n吹水群：https://t.me/wenmou_car`);
             }
+        } else {
+            $.msg($.name, "", '限时瓜分盲盒奖励' + message)
         }
+
     }
 
 })()
 .catch((e) => $.logErr(e))
     .finally(() => $.done())
-//获取活动信息
-
-function getcode() {
-    return new Promise(async (resolve) => {
-            const options = taskUrl("limitBoxHome", `{"source":"source","rnVersion":"3.9","rnClient":"1"}`)
-            //  console.log(options)
-            $.get(options, async (err, resp, data) => {
-                    try {
-                        if (err) {
-                            console.log(`${JSON.stringify(err)}`);
-                            console.log(`${$.name} API请求失败，请检查网路重试`);
-                        } else {
-                            data = JSON.parse(data);
-                            //      console.log(data)
-                            if (data.code === "0" && data.data && data.data.masterPin) {
-                                for (list of data.data.taskList) {
-                                    status = list.taskStatus == 1 ? "已完成" : "未完成"
-                                    console.log(list.taskTitle + " : " + status)
-                                    }
-                                    if (data.data.taskList[2].taskStatus === "0") {
-                                        codeList[codeList.length] = {
-                                            masterPin: data.data.masterPin,
-                                            shareDate: data.data.shareDate
-                                        }
-
-                                        console.log(`获取成功 邀请码：${data.data.masterPin}`)
-                                    } else {
-                                        console.log("已完成邀请任务")
-                                    }
-                                    let boxShowInfo = data.data.boxShowInfo
-                                    $.availableOpenBoxNum = boxShowInfo.availableOpenBoxNum
-                                    boxList = boxShowInfo.boxList
-                                    for (i = 0; i < boxList.length; i++) {
-                                        console.log(`盲盒 ${boxList[i].boxName} : ${boxList[i].boxNum}`)
-                                    }
-                                    console.log("可开盲盒次数: " + $.availableOpenBoxNum)
-                                }
-                            }
-                        } catch (e) {
-                            $.logErr(e, resp);
-                        } finally {
-                            resolve();
-                        }
-                    });
-            });
-    }
-
-
-    function help(masterPin, shareDate) {
+    
+    function bigAward() {
         return new Promise(async (resolve) => {
-            const options = taskUrl("limitBoxHelp", `{"masterPin":"${masterPin}","shareDate":"${shareDate}"}`)
-            //  console.log(options)
+            const options = taskUrl("limitBoxBigAward", "{}")
             $.get(options, async (err, resp, data) => {
                 try {
                     if (err) {
@@ -165,80 +105,18 @@ function getcode() {
                         console.log(`${$.name} API请求失败，请检查网路重试`);
                     } else {
                         data = JSON.parse(data);
-                    //    console.log(data)
+ 
                         if (data.errorCode) {
                             resolve(data.errorCode)
                             console.log(data.errorMessage)
-                        } else if (data.data) {
-                            if (data.data.helpResult) {
-                                console.log(data.data.remindMsg)
-                            } else {
-                                console.log(data.data.errorMessage)
-                            }
-                            resolve(1)
-                        } else {
-                            console.log(data.errorMessage)
-                            resolve(0)
-                        }
-
-                    }
-                } catch (e) {
-                    $.logErr(e, resp);
-                } finally {
-                    resolve();
-                }
-            });
-        });
-    }
-
-    function dotask(type) {
-        return new Promise(async (resolve) => {
-            const options = taskUrl("limitBoxDoTask", `{"type":"${type}"}`)
-            $.get(options, async (err, resp, data) => {
-                try {
-                    if (err) {
-                        console.log(`${JSON.stringify(err)}`);
-                        console.log(`${$.name} API请求失败，请检查网路重试`);
-                    } else {
-                        data = JSON.parse(data);
-                        //   console.log(data)
-                        if (data.errorCode) {
-                            resolve(data.errorCode)
-                            console.log(data.errorMessage)
-                        } else if (data.data) {
-                            console.log(data.data.remindMsg)
-                        } else {
-                            console.log(data.errorMessage)
-                            resolve(0)
-                        }
-
-                    }
-                } catch (e) {
-                    $.logErr(e, resp);
-                } finally {
-                    resolve();
-                }
-            });
-        });
-    }
-
-
-    function limitBoxDraw() {
-        return new Promise(async (resolve) => {
-            const options = taskUrl("limitBoxDraw", `{}`)
-            $.get(options, async (err, resp, data) => {
-                try {
-                    if (err) {
-                        console.log(`${JSON.stringify(err)}`);
-                        console.log(`${$.name} API请求失败，请检查网路重试`);
-                    } else {
-                        data = JSON.parse(data);
-                        //   console.log(data)
-                        if (data.data.beanNum) {
-                            console.log(`获得盲盒[${data.data.boxId}] ${data.data.beanNum}京豆`)
+                        } else if (data.data&&data.data.beanNum) {
+                           $.beans = data.data.beanNum
+                            console.log("瓜分成功,获得 京豆："+$.beans)
                         } else {
                             console.log(data)
+                            
                         }
+
                     }
                 } catch (e) {
                     $.logErr(e, resp);
@@ -248,6 +126,9 @@ function getcode() {
             });
         });
     }
+
+
+
 
 
 

@@ -92,6 +92,7 @@ message = ""
                         $.message += `当前金额 ${$.reward.rewardValue}\n`
                         await open("gambleObtainReward", $.reward.rewardType)
                         await Draw($.reward.id, $.reward.poolBaseId, $.reward.prizeGroupId, $.reward.prizeBaseId, $.reward.prizeType)
+                        await $.wait(500);
                         await totalPrize()
                         message += $.message + `${$.drawresult}累计获得：￥${$.prize} 🧧${$.Hb} \n\n`
                         //    await notify.sendNotify(`京东极速版大赢家翻倍红包提现`, `${$.message}`); 
