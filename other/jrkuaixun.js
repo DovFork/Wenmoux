@@ -1,9 +1,8 @@
 /*
 10s阅读
-微信打开
-立即参与 -> http://h5.hakc.top/j/r2?upuid=136513&ch=xmy
-备用链接 -> http://h5.qzsjfc.xyz/j/r2?upuid=136513&ch=xmy
-我测试20是秒到的
+微信打开立即参与 -> http://h5.qzsjfc.xyz/j/h?upuid=136513&ch=xmy&type=1
+备用链接 -> http://h5.saibangkaile.xyz/j/h?upuid=136513&ch=xmy&type=1
+
 每小时有0.3 一天5轮 一天1.5
 进不去关注10秒读书极速版公众号用官方链接
 使用方法:点击开始阅读 成功阅读一次即可抓到包
@@ -95,11 +94,9 @@ message = ""
 function read10sck() {
     if ($request.url.indexOf("do_read") > -1) {
         const read10surls = $request.url
-        let read10surl = read10surls.match(/.+?top/)
-        $.msg($.name, "", '10s阅读 获取数据获取成功！'+read10surl)
-          if(read10surl)     $.setdata(read10surl[0],"read10surl")
-        //   $.log(read10surl)
-        //  const read10shd = JSON.stringify()
+        let read10surl = read10surls.match(/(.+?)\/read_channel/)
+//        $.msg($.name, "", '10s阅读 获取数据获取成功！'+read10surl)
+          if(read10surl)     $.setdata(read10surl[1],"read10surl")
         if ($request.headers.Cookie) $.setdata($request.headers.Cookie, `read10sck`)
         $.log(read10sck)
         $.msg($.name, "", '10s阅读 获取数据获取成功！')
@@ -137,10 +134,9 @@ function read(url1) {
                             resolve(data.url)
                         } else {
                             console.log(data.click_check)
-                            if (data.click_check) {
+                            if (data.click_check||data.data.jkey) {
                                 $.message = "该账号需要验证请手动阅读一次并关掉页面(不要点返回)"
-                                console.log($.message)
-
+                        //        console.log($.message)
                             } else {
                                 console.log(data)
                             }
