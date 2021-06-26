@@ -217,7 +217,7 @@ function getActCk() {
 
 //获取我的pin
 function getMyPin() {
-    let config = taskUrl("/customer/getMyPing", `userId=1000324421&token=${$.token2}&fromType=APP`)
+    let config = taskUrl("/customer/getMyPing", `userId=1000324421&token=${encodeURIComponent($.token2)}&fromType=APP`)
     // console.log(config)
     return new Promise(resolve => {
         $.get(config, async (err, resp, data) => {
@@ -331,7 +331,7 @@ function getUid() {
 
 //获取任务列表
 function getinfo() {
-    let config = taskUrl("/dingzhi/hisense/europeancup/myInfo", `activityId=${$.actid}&pin=${$.pin}&pinImg=${$.pinImg}&nick=${$.nick}&cjyxPin=&cjhyPin=&shareUuid=${$.shareuuid}`)
+    let config = taskUrl("/dingzhi/hisense/europeancup/myInfo", `activityId=${$.actid}&pin=${encodeURIComponent($.pin)}&pinImg=${$.pinImg}&nick=${$.nick}&cjyxPin=&cjhyPin=&shareUuid=${$.shareuuid}`)
     return new Promise(resolve => {
         $.get(config, async (err, resp, data) => {
             try {
@@ -439,7 +439,7 @@ console.log(JSON.stringify(data.data))
 }
 
 function dotask(taskId, params) {
-    let config = taskUrl("/dingzhi/hisense/europeancup/doTask", `taskId=${taskId}&${params?("param="+params+"&"):""}activityId=${$.actid}&pin=${$.pin}&actorUuid=${$.uuid}&userUuid=${$.shareuuid}`)
+    let config = taskUrl("/dingzhi/hisense/europeancup/doTask", `taskId=${taskId}&${params?("param="+params+"&"):""}activityId=${$.actid}&pin=${encodeURIComponent($.pin)}&actorUuid=${$.uuid}&userUuid=${$.shareuuid}`)
 //     console.log(config)
     return new Promise(resolve => {
         $.get(config, async (err, resp, data) => {

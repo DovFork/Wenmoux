@@ -242,7 +242,7 @@ function getshopid() {
 
 //获取我的pin
 function getMyPin() {
-    let config = taskPostUrl("/customer/getMyPing", `userId=${$.shopid}&token=${$.token2}&fromType=APP`)
+    let config = taskPostUrl("/customer/getMyPing", `userId=${$.shopid}&token=${encodeURIComponent($.token2)}&fromType=APP`)
     //   console.log(config)
     return new Promise(resolve => {
         $.post(config, async (err, resp, data) => {
@@ -270,7 +270,7 @@ function getMyPin() {
 }
 
 function adlog() {
-    let config = taskPostUrl("/common/accessLogWithAD", `venderId=1000361242&code=99&pin=${$.pin}&activityId=90121061401&pageUrl=https%3A%2F%2Flzdz-isv.isvjcloud.com%2Fdingzhi%2Fqqxing%2Fpasture%2Factivity%3FactivityId%3D90121061401%26lng%3D107.146945%26lat%3D33.255267%26sid%3Dcad74d1c843bd47422ae20cadf6fe5aw%26un_area%3D27_2442_2444_31912&subType=app&adSource=`)
+    let config = taskPostUrl("/common/accessLogWithAD", `venderId=1000361242&code=99&pin=${encodeURIComponent($.pin)}&activityId=90121061401&pageUrl=https%3A%2F%2Flzdz-isv.isvjcloud.com%2Fdingzhi%2Fqqxing%2Fpasture%2Factivity%3FactivityId%3D90121061401%26lng%3D107.146945%26lat%3D33.255267%26sid%3Dcad74d1c843bd47422ae20cadf6fe5aw%26un_area%3D27_2442_2444_31912&subType=app&adSource=`)
     //   console.log(config)
     return new Promise(resolve => {
         $.post(config, async (err, resp, data) => {
@@ -304,7 +304,7 @@ function adlog() {
 // 获得用户信息  
 function getUserInfo() {
     return new Promise(resolve => {
-        let body = `pin=${$.pin}`
+        let body = `pin=${encodeURIComponent($.pin)}`
         let config = taskPostUrl('/wxActionCommon/getUserInfo', body)
         //   console.log(config)
         $.post(config, async (err, resp, data) => {
@@ -358,7 +358,7 @@ function getUid() {
 
 //获取任务列表
 function getinfo() {
-    let config = taskPostUrl("/dingzhi/qqxing/pasture/myInfo", `activityId=90121061401&pin=${$.pin}&pinImg=${$.pinImg}&nick=${$.nick}&cjyxPin=&cjhyPin=&shareUuid=${$.shareuuid}`)
+    let config = taskPostUrl("/dingzhi/qqxing/pasture/myInfo", `activityId=90121061401&pin=${encodeURIComponent($.pin)}&pinImg=${$.pinImg}&nick=${$.nick}&cjyxPin=&cjhyPin=&shareUuid=${$.shareuuid}`)
     return new Promise(resolve => {
         $.post(config, async (err, resp, data) => {
             try {
@@ -453,7 +453,7 @@ function writePersonInfo(vid) {
 
 
 function dotask(taskId, params) {
-    let config = taskPostUrl("/dingzhi/qqxing/pasture/doTask", `taskId=${taskId}&${params?("param="+params+"&"):""}activityId=90121061401&pin=${$.pin}&actorUuid=${$.uuid}&userUuid=${$.shareuuid}`)
+    let config = taskPostUrl("/dingzhi/qqxing/pasture/doTask", `taskId=${taskId}&${params?("param="+params+"&"):""}activityId=90121061401&pin=${encodeURIComponent($.pin)}&actorUuid=${$.uuid}&userUuid=${$.shareuuid}`)
     //     console.log(config)
     return new Promise(resolve => {
         $.post(config, async (err, resp, data) => {
@@ -482,7 +482,7 @@ function dotask(taskId, params) {
 }
 
 function draw() {
-    let config = taskPostUrl("/dingzhi/qqxing/pasture/luckydraw", `activityId=90121061401&pin=${$.pin}&actorUuid=&userUuid=`)
+    let config = taskPostUrl("/dingzhi/qqxing/pasture/luckydraw", `activityId=90121061401&pin=${encodeURIComponent($.pin)}&actorUuid=&userUuid=`)
     //  console.log(config)
     return new Promise(resolve => {
         $.post(config, async (err, resp, data) => {
