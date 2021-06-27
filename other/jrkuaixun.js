@@ -33,8 +33,8 @@ hostname = m.lainiwl.top
 const $ = new Env('10s阅读');
 const notify = $.isNode() ? require('./sendNotify') : '';
 const jrpush = $.isNode() ? (process.env.jrpush ? process.env.jrpush : false) :false;
-
-let host = $.getdata('read10surl')?$.getdata('read10surl'):`http://m.lainiwl.top`;
+const UA = $.isNode() ? (process.env.Read10UA ? process.env.Read10UA : "Mozilla/5.0 (Linux; Android 11; Redmi K30 Build/RKQ1.200826.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045617 Mobile Safari/537.36 MMWEBID/5077 MicroMessenger/8.0.6.1900(0x2800063D) Process/tools WeChat/arm64 Weixin NetType/WIFI Language/zh_CN ABI/arm64") : ($.getdata('Read10UA') ? JSON.parse($.getdata('Read10UA')) : "Mozilla/5.0 (Linux; Android 11; Redmi K30 Build/RKQ1.200826.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045617 Mobile Safari/537.36 MMWEBID/5077 MicroMessenger/8.0.6.1900(0x2800063D) Process/tools WeChat/arm64 Weixin NetType/WIFI Language/zh_CN ABI/arm64")    
+let host = $.getdata('read10surl')?$.getdata('read10surl'):`http://m.xhh25.top`;
 let cookiesArr = [$.getdata('read10sck')]
 if ($.isNode()) {
     cookiesArr = process.env.Readck ? process.env.Readck.split("@") : []
@@ -95,6 +95,7 @@ function read10sck() {
     if ($request.url.indexOf("do_read") > -1) {
         const read10surls = $request.url
         let read10surl = read10surls.match(/(.+?)\/read_channel/)
+         $.setdata(JSON.stringify($request.headers),"read10surl")
 //        $.msg($.name, "", '10s阅读 获取数据获取成功！'+read10surl)
           if(read10surl)     $.setdata(read10surl[1],"read10surl")
         if ($request.headers.Cookie) $.setdata($request.headers.Cookie, `read10sck`)
@@ -106,14 +107,15 @@ function read10sck() {
 function read(url1) {
     return new Promise(async (resolve) => {
         if (!url1) {
-            url = `${host}/read_channel/do_read&pageshow&r=0.8321951810381554`
+            url = `${host}/read_channel/do_read&pageshow&r=`
         } else {
             url = url1
         }
       let headers = {
             cookie,
             referer:url,
-            "X-Requested-With": "XMLHttpRequest"
+            "X-Requested-With": "XMLHttpRequest",
+            "User-Agent": UA
         }
         let options = {
             headers,
@@ -130,13 +132,17 @@ function read(url1) {
                     if (!url1) {
                         console.log(data)
                         data = JSON.parse(data);
-                        if (data.url) {                       
-                            resolve(data.url)
+                        if (data.url) {
+                          if(!data.jkey){                  
+                            resolve(data.url)}else{
+                                    $.message = "该账号需要验证请手动阅读一次并关掉页面(不要点返回)"
+                         $.canRead = false
+                            }
                         } else {
-                            console.log(data.click_check)
-                            if (data.click_check||data.data.jkey) {
+                       //     console.log(data.click_check)
+                            if (data.click_check ) {
                                 $.message = "该账号需要验证请手动阅读一次并关掉页面(不要点返回)"
-                        //        console.log($.message)
+                                  console.log($.message)
                             } else {
                                 console.log(data)
                             }
