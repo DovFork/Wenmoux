@@ -19,7 +19,7 @@ const randomCount = $.isNode() ? 20 : 5;
 const notify = $.isNode() ? require('./sendNotify') : '';
 let merge = {}
 let codeList = []
-
+Exchange = $.isNode() ? (process.env.Cowexchange ? process.env.Cowexchange : false) : ($.getdata("Cowexchange") ? $.getdata("Cowexchange") : false);
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [],
     cookie = '';
@@ -52,14 +52,15 @@ $.shareuuid = "8cec00a4917e4af6ae49f8f4f9e7b58d"
                 $.openCard = true
                 $.isLogin = true;
                 $.needhelp = true
+                $.foodNum = 0
                 $.nickName = '';
                 $.drawresult = ""
+                $.exchange =0
                 console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
                 if (!$.isLogin) {
                     $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {
                         "open-url": "https://bean.m.jd.com/bean/signIndex.action"
                     });
-
                     if ($.isNode()) {
                         await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
                     }
@@ -70,9 +71,7 @@ $.shareuuid = "8cec00a4917e4af6ae49f8f4f9e7b58d"
                 await getToken2()
                 await getshopid()
                 await getMyPin()
-                await $.wait(1000)
                 await adlog()
-                await $.wait(1000)
                 await getUserInfo()
                 if ($.cando) {
                     await getUid($.shareuuid)
@@ -84,6 +83,7 @@ $.shareuuid = "8cec00a4917e4af6ae49f8f4f9e7b58d"
                         if (task.taskid == "interact") {
                             for (l = 0; l < 20 - task.curNum; l++) {
                                 await dotask(task.taskid, task.params)
+                                await $.wait(500)
                             }
                         } else if (task.taskid == "scansku") {
                             await getproduct()
@@ -91,13 +91,21 @@ $.shareuuid = "8cec00a4917e4af6ae49f8f4f9e7b58d"
                             await dotask(task.taskid, $.pparam)
                         } else {
                             await dotask(task.taskid, task.params)
+                            await $.wait(500)
                         }
                     }
                     await getinfo()
                     for (k = 0; k < $.drawchance; k++) {
                         await draw()
                     }
-                    message += `【京东账号${$.index}】${$.nickName || $.UserName}\n${$.cow} ${$.drawresult}\n`
+                    let exchanges =Math.floor($.foodNum/1000)
+                    console.log(`可兑换 ${exchanges} 次 20京🐶`)
+                    for(q = 0;q<exchanges && Exchange;q++){
+                    await exchange(13)   
+                    }
+                    await getinfo()
+                    if(!Exchange){console.log("你 默认 不兑换东西,请自行进去活动兑换")}
+                    message += `【京东账号${$.index}】${$.nickName || $.UserName}\n${$.cow} 兑换京🐶 ${$.exchange}  ${$.drawresult}\n`
                 } else {
                   $.msg($.name, "", "跑不起来了~请自己进去一次牧场")
                 }
@@ -383,6 +391,7 @@ function getinfo() {
                             }
                         }
                         $.cow = `当前🐮🐮成长值：${$.score}  饲料：${$.food.totalNum-$.food.useNum}  抽奖次数：${$.draw.totalNum-$.draw.useNum}  签到天数：${$.sign.totalNum}`
+                        $.foodNum = $.food.totalNum-$.food.useNum
                         console.log($.cow)
                         $.drawchance = $.draw.totalNum - $.draw.useNum
                     } else {
@@ -450,7 +459,32 @@ function writePersonInfo(vid) {
         })
     })
 }
-
+//兑换商品
+function exchange(id) {
+    return new Promise(resolve => {
+        let body = `pid=${id}&activityId=90121061401&pin=${encodeURIComponent($.pin)}&actorUuid=&userUuid=`
+        $.post(taskPostUrl('/dingzhi/qqxing/pasture/exchange?_', body), async (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                } else {
+                    data = JSON.parse(data);
+                 //   console.log()
+if(data.result){
+console.log(`兑换 ${data.data.rewardName}成功`)
+$.exchange += 20
+}else{
+console.log(JSON.stringify(data))
+}
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve(data);
+            }
+        })
+    })
+}
 
 function dotask(taskId, params) {
     let config = taskPostUrl("/dingzhi/qqxing/pasture/doTask", `taskId=${taskId}&${params?("param="+params+"&"):""}activityId=90121061401&pin=${encodeURIComponent($.pin)}&actorUuid=${$.uuid}&userUuid=${$.shareuuid}`)
