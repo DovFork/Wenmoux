@@ -8,7 +8,7 @@ export oksource ="android" //或ios
 https://t.me/wenmou_car
 [task_local]
 #OK语音
-*/10 8-14 * * * https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/okyuyin.js, tag=OK语音, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true 
+0-59/6 8-14 * * * https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/okyuyin.js, tag=OK语音, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true 
 */
 const $ = new Env('OK语音');
 const notify = $.isNode() ? require('./sendNotify') : '';
