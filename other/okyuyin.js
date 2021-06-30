@@ -38,14 +38,14 @@ message = ""
             $.message = ""
             auth = okauthArr[k];
             console.log(`--------账号 ${k} 任务执行中--------\n`)
+            await sign()
             await getInfo()
-            await ao()
             if ($.isLogin) {
+                await ao()
                 await getaskList()
                 for (p = 0; p < $.taskList.length; p++) {
                     let task = $.taskList[p]
                     console.log(`去做任务：${task.title}  ${task.finishNums}/${task.dayFinishToplimit} ${task.taskStatus} `)
-                    if(task.taskType==8){await sign()}
                     await receivetask(task.taskType)
                 }
                 await getInfo()
@@ -164,7 +164,6 @@ function ao() {
                             console.log(info.msg)
                         } else {
                             console.log(data)
-                            $.isLogin = false
                         }
                     }
                 }
