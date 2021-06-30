@@ -2,6 +2,7 @@
 OK语音
 10W分兑换100K币,可提现
 每日任务具体多少没算,反正都是挂着脚本,10w分可兑换100K币
+打开任务界面抓包 auth
 export okAuth=""
 export oksource ="android" //或ios
 也可以邀请人 ,A邀请B,A得三块,B邀请C,B得三块,(一个号一次),都发红包转给A然后凑100提现
@@ -36,7 +37,6 @@ message = ""
             $.isLogin = true
             $.message = ""
             auth = okauthArr[k];
-            console.log(auth)
             console.log(`--------账号 ${k} 任务执行中--------\n`)
             await getInfo()
             await ao()
@@ -47,11 +47,10 @@ message = ""
                     console.log(`去做任务：${task.title}  ${task.finishNums}/${task.dayFinishToplimit} ${task.taskStatus} `)
                     if(task.taskType==8){await sign()}
                     await receivetask(task.taskType)
-
                 }
                 await getInfo()
                 if ($.message.length != 0) {
-                    message +=  "账号$" +(k+1)+ "：  " + $.message + " \n"
+                    message +=  "账号" +(k+1)+ "：  " + $.message + " \n"
                 }
             } else {
                 $.msg($.name, "", `OK 账号${k+1}auth已失效`)
@@ -340,7 +339,7 @@ function taskPostUrl(url, body) {
 
 function taskUrl(url, body) {
     return {
-        url: `http://api.new.okyuyin.com/biz/${url}?${body}`,
+        url: `http://api.new.okyuyin.com/biz/${url}${body?("?"+body):""}`,
         headers: {
             'Host': 'api.new.okyuyin.com',
             'user-agent': 'okhttp/4.3.1',
