@@ -10,7 +10,7 @@ export oksource ="android" //或ios
 https://t.me/wenmou_car
 [task_local]
 #OK语音
-0-59/6 8-14 * * * https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/okyuyin.js, tag=OK语音, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true 
+0-59/5 8-12 * * * https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/okyuyin.js, tag=OK语音, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true 
 #loon
 [Script]
 http-request api.new.okyuyin.com script-path=https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/okyuyin.js, requires-body=true, timeout=10, tag=OK语
@@ -65,11 +65,10 @@ message = ""
             }
             console.log("\n\n")
         }
-
-        let Date = new Date()
-        if ($.isNode() &&Date.getHours() == 11 && Date.getMinutes()<10) {
+        date = new Date()
+        if ($.isNode() &&date.getHours() == 11 && date.getMinutes()<=10) {
             if (message.length != 0) {
-                   await notify.sendNotify("OK", `${message}\n\n吹水群：https://t.me/wenmou_car`);
+                   await notify.sendNotify("OK语音", `${message}\n\n吹水群：https://t.me/wenmou_car`);
             }
         } else {
             $.msg($.name, "",  message)
