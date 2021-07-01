@@ -334,7 +334,7 @@ function taskPostUrl(url, body) {
         json: body,
         headers: {
             'Host': 'api.new.okyuyin.com',
-            'user-agent': okSource=="android"? 'okhttp/4.3.1':($.getdata("okUA")?$.getdata("okUA")?:"OKVoice/4.2.3 (iPad; iOS 14.5.1; Scale/2.00)"),
+            'user-agent': okSource=="android"? 'okhttp/4.3.1':($.getdata("okUA")?$.getdata("okUA"):"OKVoice/4.2.3 (iPad; iOS 14.5.1; Scale/2.00)"),
             'source': okSource,
             'authorization': auth,
             'content-type': 'application/json; charset=UTF-8',
@@ -347,7 +347,7 @@ function taskUrl(url, body) {
         url: `http://api.new.okyuyin.com/biz/${url}${body?("?"+body):""}`,
         headers: {
             'Host': 'api.new.okyuyin.com',
-            'user-agent': okSource=="android"? 'okhttp/4.3.1':($.getdata("okUA")?$.getdata("okUA")?:"OKVoice/4.2.3 (iPad; iOS 14.5.1; Scale/2.00)"),
+            'user-agent': okSource=="android"? 'okhttp/4.3.1':($.getdata("okUA")?$.getdata("okUA"):"OKVoice/4.2.3 (iPad; iOS 14.5.1; Scale/2.00)"),
             'source': okSource,
             'authorization': auth
         }
