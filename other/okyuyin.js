@@ -3,6 +3,7 @@ OK语音
 10W分兑换100K币,可提现
 每日任务具体多少没算,反正都是挂着脚本,10w分可兑换100K币
 打开任务界面抓包 auth
+提现必须人脸实名,玩不玩随意阿。
 export okAuth=""
 export oksource ="android" //或ios
 也可以邀请人 ,A邀请B,A得三块,B邀请C,B得三块,(一个号一次),都发红包转给A然后凑100提现
@@ -10,11 +11,18 @@ https://t.me/wenmou_car
 [task_local]
 #OK语音
 0-59/6 8-14 * * * https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/okyuyin.js, tag=OK语音, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true 
+#loon
+[Script]
+http-request api.new.okyuyin.com script-path=https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/okyuyin.js, requires-body=true, timeout=10, tag=OK语
+cron "0-59/6 8-14 * * *" script-path=https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/okyuyin.js
+[MITM]
+hostname = api.new.okyuyin.com
 */
 const $ = new Env('OK语音');
 const notify = $.isNode() ? require('./sendNotify') : '';
-const okSource = $.isNode() ? (process.env.oksource ? process.env.oksource : "android") : "ios";
-const okAuth = $.isNode() ? (process.env.okAuth ? process.env.okAuth : "") : ($.getdata('okAuth') ? JSON.parse($.getdata('okAuth')) : "")
+const okSource = $.isNode() ? (process.env.oksource ? process.env.oksource : "android") : ($.getdata('oksource') ? $.getdata('oksource') : "ios")
+const okAuth = $.isNode() ? (process.env.okAuth ? process.env.okAuth : "") : ($.getdata('okAuth') ? $.getdata('okAuth') : "")
+let okauthArr = []
 if (okAuth.match("&")) {
     okauthArr = okAuth.split("&")
 } else {
@@ -23,7 +31,7 @@ if (okAuth.match("&")) {
 message = ""
 !(async () => {
         if (typeof $request !== "undefined") {
-            //   await read10sck()
+             await getauth()
         }
         if (!okauthArr[0]) {
             $.msg($.name, '【提示】请先获取cookie', '自行应用商店下载ok语音app抓包请求头里authorization', {
@@ -58,8 +66,8 @@ message = ""
             console.log("\n\n")
         }
 
-
-        if ($.isNode() &&new Date().getHours() == 9) {
+        let Date = new Date()
+        if ($.isNode() &&Date.getHours() == 11 && Date.getMinutes()<10) {
             if (message.length != 0) {
                    await notify.sendNotify("OK", `${message}\n\n吹水群：https://t.me/wenmou_car`);
             }
@@ -73,16 +81,14 @@ message = ""
 //获取活动信息
 
 
-function read10sck() {
-    if ($request.url.indexOf("do_read") > -1) {
-        const read10surls = $request.url
-        let read10surl = read10surls.match(/(.+?)\/read_channel/)
-        $.setdata(JSON.stringify($request.headers), "read10surl")
-        //        $.msg($.name, "", '10s阅读 获取数据获取成功！'+read10surl)
-        if (read10surl) $.setdata(read10surl[1], "read10surl")
-        if ($request.headers.Cookie) $.setdata($request.headers.Cookie, `read10sck`)
-        $.log(read10sck)
-        $.msg($.name, "", '10s阅读 获取数据获取成功！')
+function getauth() {
+    if ($request.url.indexOf("api.new.okyuyin.com") > -1) {
+    if($request.headers){
+         if ($request.headers.authorization || $request.headers.Authorization) $.setdata($request.headers.authorization?$request.headers.authorization:$request.headers.Authorization, "okAuth")
+        if($.getdata("okAuth")){$.msg($.name, "", 'OK语音 获取数据获取成功！')}
+        if ($request.headers.source) $.setdata($request.headers.source, "oksource")     
+        $.setdata($request.headers["User-Agent"], "okUA")                              
+        }
     }
 }
 
@@ -328,7 +334,7 @@ function taskPostUrl(url, body) {
         json: body,
         headers: {
             'Host': 'api.new.okyuyin.com',
-            'user-agent': 'okhttp/4.3.1',
+            'user-agent': okSource=="android"? 'okhttp/4.3.1':($.getdata("okUA")?$.getdata("okUA")?:"OKVoice/4.2.3 (iPad; iOS 14.5.1; Scale/2.00)"),
             'source': okSource,
             'authorization': auth,
             'content-type': 'application/json; charset=UTF-8',
@@ -341,7 +347,7 @@ function taskUrl(url, body) {
         url: `http://api.new.okyuyin.com/biz/${url}${body?("?"+body):""}`,
         headers: {
             'Host': 'api.new.okyuyin.com',
-            'user-agent': 'okhttp/4.3.1',
+            'user-agent': okSource=="android"? 'okhttp/4.3.1':($.getdata("okUA")?$.getdata("okUA")?:"OKVoice/4.2.3 (iPad; iOS 14.5.1; Scale/2.00)"),
             'source': okSource,
             'authorization': auth
         }
