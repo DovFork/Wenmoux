@@ -105,7 +105,7 @@ $.shareuuid = "8cec00a4917e4af6ae49f8f4f9e7b58d"
                     }
                     await getinfo()                     
                     if(!Exchange){console.log("你 默认 不兑换东西,请自行进去活动兑换")}                    
-                    message += `【京东账号${$.index}】${$.nickName || $.UserName}\n${$.cow} 兑换京🐶 ${$.exchange}  ${$.drawresult}\n`
+                    message += `【京东账号${$.index}】${$.nickName || $.UserName}\n${$.cow} 兑换京🐶 ${$.exchange}  ${$.drawresult}\n\n`
                     if($.index%3===0) 
                    {
                   await $.wait(60*1000) 

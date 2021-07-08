@@ -1,10 +1,10 @@
 /*
 
 [task_local]
-#星系牧场
+#7月粉丝互动
 1 8 * * * https://raw.githubusercontent.com/Wenmoux/scripts/wen/jd/jd_wxFans.js, tag=粉丝互动, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 */
-const $ = new Env('超级粉丝互动');
+const $ = new Env('粉丝互动');
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const randomCount = $.isNode() ? 20 : 5;

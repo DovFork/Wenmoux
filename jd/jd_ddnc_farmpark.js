@@ -1,8 +1,7 @@
-
 /*
-东东乐园@wenmoux
+东东乐园
 活动入口：东东农场->东东乐园(点大风车
-好像没啥用 就20💧
+好像没啥用 就不知道几滴💧
 更新地址：https://raw.githubusercontent.com/Wenmoux/scripts/wen/jd/jd_ddnc_farmpark.js
 已支持IOS双京东账号, Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, 小火箭，JSBox, Node.js
